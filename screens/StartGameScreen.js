@@ -11,14 +11,15 @@ import {
   Platform,
 } from "react-native";
 import PrimaryButton from "../components/PrimaryButton";
+import Colors from "../assets/costants/colors";
 import { useState } from "react";
 
 function StartGameScreen({ onPickNumber }) {
   const [enteredNumber, setEnteredNumber] = useState("");
 
-  const { widthRelative, heightRelative } = useWindowDimensions();
+  const { width, height } = useWindowDimensions();
 
-  const marginTopRelative = heightRelative < 380 ? 30 : 100;
+  const marginTopRelative = height < width ? 0 : 100;
 
   function resetInputHandler() {
     setEnteredNumber("");
@@ -82,20 +83,22 @@ function StartGameScreen({ onPickNumber }) {
 export default StartGameScreen;
 
 const widthDim = Dimensions.get("window").width;
+const heightDim = Dimensions.get("window").height;
 
 const styles = StyleSheet.create({
   inputContainer: {
-    marginTop: 50,
-    marginHorizontal: widthDim < 380 ? 12 : 24,
+    marginTop: heightDim < widthDim ? 20 : 50,
+    marginHorizontal: heightDim < widthDim ? 12 : 24,
     padding: 16,
-    backgroundColor: "#3b021f",
+    backgroundColor: Colors.primary800,
     borderRadius: 8,
     elevation: 4,
-    shadowColor: "black",
+    shadowColor: Colors.primary800,
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 6,
     shadowOpacity: 0.25,
     alignItems: "center",
+    maxWidth: heightDim < widthDim ? "60%" : "100%",
   },
   introContainer: {
     alignItems: "center",
@@ -103,9 +106,9 @@ const styles = StyleSheet.create({
   numberInput: {
     width: 50,
     fontSize: 32,
-    borderBottomColor: "#ddb52f",
+    borderBottomColor: Colors.accent500,
     borderBottomWidth: Platform.select({ios: 0, android: 2}),
-    color: "#ddb52f",
+    color: Colors.accent500,
     marginVertical: 8,
     fontWeight: "bold",
     textAlign: "center",
@@ -125,7 +128,7 @@ const styles = StyleSheet.create({
     borderColor: "white",
     borderWidth: 2,
     padding: 12,
-    marginTop: 100,
+    marginTop: heightDim < widthDim ? 30 : 100,
     maxWidth: "80%",
     marginHorizontal: widthDim < 380 ? 12 : 24,
   },

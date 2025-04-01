@@ -15,10 +15,11 @@ import { useState } from "react";
 export default function App() {
   const [pickedNumber, setPickedNumber] = useState();
   const [gameIsOver, setGameIsOver] = useState(true);
+  const [numberList, setNumberList] = useState([]);
 
   const [fontsLoaded] = useFonts({
-    'open-sans': require('./assets/fonts/OpenSans-Regular.ttf'),
-    'open-sans-bold': require('./assets/fonts/OpenSans-Bold.ttf'),
+    "open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
+    "open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
   });
 
   if (!fontsLoaded) {
@@ -34,7 +35,8 @@ export default function App() {
     setGameIsOver(true);
   }
 
-  function gameOverHandler() {
+  function restartGame() {
+    setNumberList([]);
     setPickedNumber(null);
   }
 
@@ -45,12 +47,14 @@ export default function App() {
       <GameScreen
         pickedNumber={pickedNumber}
         onGameOver={gameOverHandler}
+        numberList={numberList}
+        setNumberList={setNumberList}
       />
     );
   }
 
   if (gameIsOver && pickedNumber) {
-    screen = <GameOver onRestart={gameOverHandler} />;
+    screen = <GameOver onRestart={restartGame} numberList={numberList} pickedNumber={pickedNumber} />;
   }
 
   return (
