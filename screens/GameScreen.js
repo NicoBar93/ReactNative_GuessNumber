@@ -1,11 +1,11 @@
 import { View, Text, StyleSheet } from "react-native";
 import Feedback from "../components/Feedback";
 
-function GameScreen() {
+function GameScreen({onGameOver, pickedNumber}) {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Opponent's Guess</Text>
-      <Feedback />
+      <Feedback onGameOver={onGameOver} pickedNumber={pickedNumber} />
     </View>
   );
 }

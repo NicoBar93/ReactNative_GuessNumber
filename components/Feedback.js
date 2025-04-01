@@ -1,23 +1,75 @@
+import { useState, useEffect } from "react";
+import { View, StyleSheet, Text, FlatList, Alert } from "react-native";
 import PrimaryButton from "./PrimaryButton";
-import { View, StyleSheet, Text } from "react-native";
 
-function Feedback() {
+function Feedback({ onGameOver, pickedNumber }) {
+  const getRandomNumber = (min, max) =>
+    Math.floor(Math.random() * (max - min + 1)) + min;
+
+  const [min, setMin] = useState(1);
+  const [max, setMax] = useState(99);
+  const [current, setCurrent] = useState(getRandomNumber(1, 99));
+  const [numberList, setNumberList] = useState([]);
+
+  useEffect(() => {
+    if (current === pickedNumber) {
+      onGameOver();
+    }
+  }, [current, pickedNumber, onGameOver]);
+
+  const handleHigher = () => {
+    if (current > pickedNumber) {
+      Alert.alert("Don't lie!", "You know that this is wrong...", [
+        { text: "Sorry", style: "cancel" },
+      ]);
+      return;
+    }
+    setMin(current);
+    setCurrent(getRandomNumber(current, max));
+    setNumberList((prev) => [current, ...prev]);
+  };
+
+  const handleLower = () => {
+    if (current < pickedNumber) {
+      Alert.alert("Don't lie!", "You know that this is wrong...", [
+        { text: "Sorry", style: "cancel" },
+      ]);
+      return;
+    }
+    setMax(current);
+    setCurrent(getRandomNumber(min, current));
+    setNumberList((prev) => [current, ...prev]);
+  };
+
   return (
     <View>
       <View style={styles.guessContainer}>
-        <Text style={styles.guess}>25</Text>
+        <Text style={styles.guess}>{current}</Text>
       </View>
       <View style={styles.container}>
         <Text style={styles.text}>Higher or Lower?</Text>
         <View style={styles.buttonsContainer}>
           <View style={styles.button}>
-            <PrimaryButton>-</PrimaryButton>
+            <PrimaryButton onPress={handleLower}>-</PrimaryButton>
           </View>
           <View style={styles.button}>
-            <PrimaryButton>+</PrimaryButton>
+            <PrimaryButton onPress={handleHigher}>+</PrimaryButton>
           </View>
         </View>
       </View>
+      <FlatList
+        data={numberList}
+        keyExtractor={(item, index) => index.toString()} // Fix per keyExtractor
+        renderItem={({ item, index }) => (
+          <View
+            style={styles.print}
+            key={index}
+          >
+            <Text>#{numberList.length - index}</Text>
+            <Text>Opponent's Guess: {item}</Text>
+          </View>
+        )}
+      />
     </View>
   );
 }
@@ -62,5 +114,9 @@ const styles = StyleSheet.create({
   },
   button: {
     flex: 1,
+  },
+  print: {
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 });
